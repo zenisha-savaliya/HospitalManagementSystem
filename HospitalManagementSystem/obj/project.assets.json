@@ -4013,11 +4013,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\VISUAL STUDIO PROJECTS\\HospitalManagementSystem\\HospitalManagementSystem\\HospitalManagementSystem.csproj",
+      "projectUniqueName": "C:\\HospitalManagementSystem\\HospitalManagementSystem\\HospitalManagementSystem.csproj",
       "projectName": "HospitalManagementSystem",
-      "projectPath": "D:\\VISUAL STUDIO PROJECTS\\HospitalManagementSystem\\HospitalManagementSystem\\HospitalManagementSystem.csproj",
+      "projectPath": "C:\\HospitalManagementSystem\\HospitalManagementSystem\\HospitalManagementSystem.csproj",
       "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
-      "outputPath": "D:\\VISUAL STUDIO PROJECTS\\HospitalManagementSystem\\HospitalManagementSystem\\obj\\",
+      "outputPath": "C:\\HospitalManagementSystem\\HospitalManagementSystem\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -4034,8 +4034,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "D:\\VISUAL STUDIO PROJECTS\\HospitalManagementSystem\\Service\\Service.csproj": {
-              "projectPath": "D:\\VISUAL STUDIO PROJECTS\\HospitalManagementSystem\\Service\\Service.csproj"
+            "C:\\HospitalManagementSystem\\Service\\Service.csproj": {
+              "projectPath": "C:\\HospitalManagementSystem\\Service\\Service.csproj"
             }
           }
         }

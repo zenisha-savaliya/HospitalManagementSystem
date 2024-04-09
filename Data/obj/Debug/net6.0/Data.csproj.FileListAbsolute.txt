@@ -12,3 +12,18 @@ D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Data\obj\Debug\net6.0\refint\
 D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Data\obj\Debug\net6.0\Data.pdb
 D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Data\obj\Debug\net6.0\Data.genruntimeconfig.cache
 D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Data\obj\Debug\net6.0\ref\Data.dll
+C:\HospitalManagementSystem\Data\bin\Debug\net6.0\Data.deps.json
+C:\HospitalManagementSystem\Data\bin\Debug\net6.0\Data.runtimeconfig.json
+C:\HospitalManagementSystem\Data\bin\Debug\net6.0\Data.dll
+C:\HospitalManagementSystem\Data\bin\Debug\net6.0\Data.pdb
+C:\HospitalManagementSystem\Data\obj\Debug\net6.0\Data.csproj.AssemblyReference.cache
+C:\HospitalManagementSystem\Data\obj\Debug\net6.0\Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\HospitalManagementSystem\Data\obj\Debug\net6.0\Data.AssemblyInfoInputs.cache
+C:\HospitalManagementSystem\Data\obj\Debug\net6.0\Data.AssemblyInfo.cs
+C:\HospitalManagementSystem\Data\obj\Debug\net6.0\Data.csproj.CoreCompileInputs.cache
+C:\HospitalManagementSystem\Data\obj\Debug\net6.0\Data.sourcelink.json
+C:\HospitalManagementSystem\Data\obj\Debug\net6.0\Data.dll
+C:\HospitalManagementSystem\Data\obj\Debug\net6.0\refint\Data.dll
+C:\HospitalManagementSystem\Data\obj\Debug\net6.0\Data.pdb
+C:\HospitalManagementSystem\Data\obj\Debug\net6.0\Data.genruntimeconfig.cache
+C:\HospitalManagementSystem\Data\obj\Debug\net6.0\ref\Data.dll

@@ -26,6 +26,35 @@ namespace Data.Repository
             }
         }
 
+        public async Task<bool> ChangeStatus(int id, string status)
+        {
+            try
+            {
+                Appointment appointmentToUpdate = await _context.Appointments.FirstOrDefaultAsync(a => a.AppoinmentId == id);
+
+                if (appointmentToUpdate == null)
+                {
+                    return false; 
+                }
+
+                appointmentToUpdate.Status = status;
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public async Task<List<Appointment>> CheckAppointments(string consultDoctor)
+        {
+            return await _context.Appointments
+                .Where(a => a.ConsultDoctor == consultDoctor)
+                .ToListAsync();
+        }
+
         public async Task<bool> CheckDoctorAvailability(string consultDoctor, DateTime startTime)
         {
             var anyAppointments = await _context.Appointments

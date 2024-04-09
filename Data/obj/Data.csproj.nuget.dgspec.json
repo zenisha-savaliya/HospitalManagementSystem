@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\VISUAL STUDIO PROJECTS\\HospitalManagementSystem\\Data\\Data.csproj": {}
+    "C:\\HospitalManagementSystem\\Data\\Data.csproj": {}
   },
   "projects": {
-    "D:\\VISUAL STUDIO PROJECTS\\HospitalManagementSystem\\Data\\Data.csproj": {
+    "C:\\HospitalManagementSystem\\Data\\Data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\VISUAL STUDIO PROJECTS\\HospitalManagementSystem\\Data\\Data.csproj",
+        "projectUniqueName": "C:\\HospitalManagementSystem\\Data\\Data.csproj",
         "projectName": "Data",
-        "projectPath": "D:\\VISUAL STUDIO PROJECTS\\HospitalManagementSystem\\Data\\Data.csproj",
+        "projectPath": "C:\\HospitalManagementSystem\\Data\\Data.csproj",
         "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
-        "outputPath": "D:\\VISUAL STUDIO PROJECTS\\HospitalManagementSystem\\Data\\obj\\",
+        "outputPath": "C:\\HospitalManagementSystem\\Data\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",

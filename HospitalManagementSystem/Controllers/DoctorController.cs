@@ -36,7 +36,20 @@ namespace HospitalManagementSystem.Controllers
         {
             return Ok(await _doctorService.AssignDuty(assignDutyDTO));
         }
-
-
+        [HttpGet("/CheckAllAppointments/{id}")]
+        public async Task<IActionResult> CheckAllAppointments(string consultDoctor)
+        {
+            return Ok(await _doctorService.CheckAppointments(consultDoctor));
+        }
+        [HttpPatch("ChangeStatusToReschedule")]
+        public async Task<IActionResult> ChangeStatusToReschedule(int id,string status)
+        {
+            return Ok(await _doctorService.ChangeStatus(id,status));
+        }
+        [HttpPatch("ChangeStatusToCancel")]
+        public async Task<IActionResult> ChangeStatusToCancel(int id, string status)
+        {
+            return Ok(await _doctorService.ChangeStatus(id, status));
+        }
     }
 }

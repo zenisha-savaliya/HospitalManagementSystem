@@ -1,13 +1,7 @@
 ﻿using Data.Interface;
 using Data.Models;
-using Data.Repository;
 using Service.DTO;
 using Service.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Service.Service
 {

@@ -1,9 +1,5 @@
 ﻿using Service.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net.NetworkInformation;
 
 namespace Service.Interface
 {
@@ -14,6 +10,8 @@ namespace Service.Interface
         Task<string> AddNurse(RegisterDTO registerDTO);
         Task<string> AddReceptionist(RegisterDTO registerDTO);
         Task<string> AssignDuty(AssignDutyDTO assignDutyDTO);
+        Task<List<DoctorAppointmentViewDTO>> CheckAppointments(string consultDoctor);
+        Task<string> ChangeStatus(int id, string status);
 
     }
 }

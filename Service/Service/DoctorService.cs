@@ -1,11 +1,13 @@
 ﻿using Data.Interface;
 using Data.Models;
+using Data.Repository;
 using Microsoft.EntityFrameworkCore;
 using Service.DTO;
 using Service.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,8 +21,10 @@ namespace Service.Service
         private readonly IReceptionistRepository _receptionistRepository;
         private readonly IPatientRepository _patientRepository;
         private readonly IDutyRepository _dutyRepository;
+        private readonly IAppoinmentRepository _appoinmentRepository;
+        private readonly IEmailService _emailService;
 
-        public DoctorService(IDoctorRepository doctorRepository,IUserRepository userRepository,INurseRepository nurseRepository,IReceptionistRepository receptionistRepository,IPatientRepository patientRepository,IDutyRepository dutyRepository)
+        public DoctorService(IDoctorRepository doctorRepository,IUserRepository userRepository,INurseRepository nurseRepository,IReceptionistRepository receptionistRepository,IPatientRepository patientRepository,IDutyRepository dutyRepository,IAppoinmentRepository appoinmentRepository,IEmailService emailService)
         {
             _doctorRepository = doctorRepository;
             _userRepository = userRepository;
@@ -28,6 +32,8 @@ namespace Service.Service
             _receptionistRepository = receptionistRepository;
             _patientRepository = patientRepository;
             _dutyRepository = dutyRepository;
+            _appoinmentRepository = appoinmentRepository;
+            _emailService = emailService;
         }
         public async Task<string> AddDoctor(RegisterDTO registerDTO, string Specialization)
         {
@@ -71,9 +77,22 @@ namespace Service.Service
                         Specialist = Specialization,
                         UserId = userId
                     };
-
                     await _doctorRepository.AddDoctor(doctor);
-                    return "Doctor added successfully";
+                    EmailDTO emailDTO = new EmailDTO
+                    {
+                        ToEmail = registerDTO.Email,
+                        Subject = "registering into our system as doctor",
+                        Body = $"<h4><b>Dear {registerDTO.FirstName},</b></h4><br><br>" +
+                                $"Welcome to our service. Your current password is <span style=\"color:blue;\">{registerDTO.Password}</span>. " +
+                                $"You can login using this password and can change your password."
+                    };
+                    bool isAdded = await _emailService.SendEmailAsync(emailDTO.ToEmail, emailDTO.Subject, emailDTO.Body);
+                    if(isAdded)
+                    {
+                        return "Doctor added successfully";
+                    }
+                    return "doctor not added successfully";
+                    
                 }
             }
             catch (Exception ex)
@@ -120,7 +139,20 @@ namespace Service.Service
                     };
 
                     await _nurseRepository.AddNurse(nurse);
-                    return "Nurse added successfully";
+                    EmailDTO emailDTO = new EmailDTO
+                    {
+                        ToEmail = registerDTO.Email,
+                        Subject = "registering into our system as nurse",
+                        Body = $"<h4><b>Dear {registerDTO.FirstName},</b></h4><br><br>" +
+                                $"Welcome to our service. Your current password is <span style=\"color:blue;\">{registerDTO.Password}</span>. " +
+                                $"You can login using this password and can change your password."
+                    };
+                    bool isAdded = await _emailService.SendEmailAsync(emailDTO.ToEmail, emailDTO.Subject, emailDTO.Body);
+                    if (isAdded)
+                    {
+                        return "Nurse added successfully";
+                    }
+                    return "Nurse not added";
                 }
             }
             catch (Exception ex)
@@ -166,7 +198,20 @@ namespace Service.Service
                     };
 
                     await _receptionistRepository.AddReceptionist(nurse);
-                    return "Receptionist added successfully";
+                    EmailDTO emailDTO = new EmailDTO
+                    {
+                        ToEmail = registerDTO.Email,
+                        Subject = "registering into our system as receptionist",
+                        Body = $"<h4><b>Dear {registerDTO.FirstName},</b></h4><br><br>" +
+                         $"Welcome to our service. Your current password is <span style=\"color:blue;\">{registerDTO.Password}</span>. " +
+                         $"You can login using this password and can change your password."
+                    };
+                    bool isAdded = await _emailService.SendEmailAsync(emailDTO.ToEmail, emailDTO.Subject, emailDTO.Body);
+                    if (isAdded)
+                    {
+                       return "Receptionist added successfully";
+                    }
+                    return "Receptionist not added";
                 }
             }
             catch (Exception ex)
@@ -213,6 +258,36 @@ namespace Service.Service
                 }
             }
             return "error while assigning nurse";
+        }
+
+        public async Task<string> ChangeStatus(int id, string status)
+        {
+            bool result = await _appoinmentRepository.ChangeStatus(id, status);
+            if(result)
+            {
+                return "status changed successfully";
+            }
+            else
+            {
+                return "error while updating status";
+            }
+        }
+
+        public async Task<List<DoctorAppointmentViewDTO>> CheckAppointments(string consultDoctor)
+        {
+            List<Appointment> appointmentList = await _appoinmentRepository.CheckAppointments(consultDoctor);
+            List<DoctorAppointmentViewDTO> doctorAppointments = appointmentList
+            .Select(a => new DoctorAppointmentViewDTO
+            {
+                PatientProblem = a.PatientProblem,
+                PatientId = a.PatientId.ToString(), 
+                ScheduleStartTime = a.ScheduleStartTime,
+                Status = a.Status
+            })
+            .ToList();
+
+            return doctorAppointments;
+
         }
     }
 }
