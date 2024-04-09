@@ -1,0 +1,15 @@
+D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Service\bin\Debug\net6.0\Service.deps.json
+D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Service\bin\Debug\net6.0\Service.dll
+D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Service\bin\Debug\net6.0\Service.pdb
+D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Service\bin\Debug\net6.0\Data.dll
+D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Service\bin\Debug\net6.0\Data.pdb
+D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Service\obj\Debug\net6.0\Service.csproj.AssemblyReference.cache
+D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Service\obj\Debug\net6.0\Service.GeneratedMSBuildEditorConfig.editorconfig
+D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Service\obj\Debug\net6.0\Service.AssemblyInfoInputs.cache
+D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Service\obj\Debug\net6.0\Service.AssemblyInfo.cs
+D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Service\obj\Debug\net6.0\Service.csproj.CoreCompileInputs.cache
+D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Service\obj\Debug\net6.0\Service.csproj.CopyComplete
+D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Service\obj\Debug\net6.0\Service.dll
+D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Service\obj\Debug\net6.0\refint\Service.dll
+D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Service\obj\Debug\net6.0\Service.pdb
+D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Service\obj\Debug\net6.0\ref\Service.dll

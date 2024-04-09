@@ -1,0 +1,14 @@
+D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Data\bin\Debug\net6.0\Data.deps.json
+D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Data\bin\Debug\net6.0\Data.runtimeconfig.json
+D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Data\bin\Debug\net6.0\Data.dll
+D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Data\bin\Debug\net6.0\Data.pdb
+D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Data\obj\Debug\net6.0\Data.csproj.AssemblyReference.cache
+D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Data\obj\Debug\net6.0\Data.GeneratedMSBuildEditorConfig.editorconfig
+D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Data\obj\Debug\net6.0\Data.AssemblyInfoInputs.cache
+D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Data\obj\Debug\net6.0\Data.AssemblyInfo.cs
+D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Data\obj\Debug\net6.0\Data.csproj.CoreCompileInputs.cache
+D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Data\obj\Debug\net6.0\Data.dll
+D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Data\obj\Debug\net6.0\refint\Data.dll
+D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Data\obj\Debug\net6.0\Data.pdb
+D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Data\obj\Debug\net6.0\Data.genruntimeconfig.cache
+D:\VISUAL STUDIO PROJECTS\HospitalManagementSystem\Data\obj\Debug\net6.0\ref\Data.dll
