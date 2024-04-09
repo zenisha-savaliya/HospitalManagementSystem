@@ -30,5 +30,20 @@ namespace Data.Repository
 
             return exists;
         }
+
+        public async Task<bool> RemoveUser(User user)
+        {
+            try
+            {
+                _context.Users.Remove(user);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while removing user: {ex.Message}");
+                return false;
+            }
+        }
     }
 }

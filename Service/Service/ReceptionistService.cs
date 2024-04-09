@@ -1,8 +1,8 @@
 ﻿using Data.Interface;
 using Data.Models;
-using Data.Repository;
 using Service.DTO;
 using Service.Interface;
+using System.Text.RegularExpressions;
 
 namespace Service.Service
 {
@@ -26,6 +26,11 @@ namespace Service.Service
         }
         public async Task<string> ScheduleAppoinment(AppointmentDTO appointmentDTO)
         {
+            string validationMessage = ValidateAppointmentDTO(appointmentDTO);
+            if (!string.IsNullOrEmpty(validationMessage))
+            {
+                return validationMessage;
+            }
             bool doctorExists = await _doctorRepository.CheckSpecialization(appointmentDTO.ConsultDoctor);
             if (!doctorExists)
             {
@@ -109,6 +114,11 @@ namespace Service.Service
             string birthDatePart = dateOfBirth.ToString("MMddyyyy"); 
             return $"{firstName}{birthDatePart}";
         }
+        private bool IsValidEmail(string email)
+        {
+            string emailPattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+            return Regex.IsMatch(email, emailPattern);
+        }
         private string ExtractNumericPart(string patientId)
         {
             string[] parts = patientId.Split('_');
@@ -117,6 +127,49 @@ namespace Service.Service
                 return parts[1]; 
             }
             return patientId;
+        }
+        private string ValidateAppointmentDTO(AppointmentDTO appointmentDTO)
+        {
+            if (string.IsNullOrEmpty(appointmentDTO.FirstName) ||
+            string.IsNullOrEmpty(appointmentDTO.LastName) ||
+            string.IsNullOrEmpty(appointmentDTO.ContactNumber) ||
+            string.IsNullOrEmpty(appointmentDTO.Email) ||
+            appointmentDTO.DateOfBirth == default ||
+            string.IsNullOrEmpty(appointmentDTO.Gender)  ||
+            string.IsNullOrEmpty(appointmentDTO.PatientProblem) ||
+            string.IsNullOrEmpty(appointmentDTO.PatientId) ||
+            appointmentDTO.ScheduleStartTime == default ||
+            string.IsNullOrEmpty(appointmentDTO.Status) ||
+            string.IsNullOrEmpty(appointmentDTO.ConsultDoctor))
+            {
+                return "All fields are required.";
+            }
+            if (appointmentDTO.DateOfBirth >= DateTime.Now)
+            {
+                return "Date of birth should be before the current date.";
+            }
+            if (!IsValidEmail(appointmentDTO.Email))
+            {
+                return "Invalid email format.";
+            }
+            if (!Regex.IsMatch(appointmentDTO.ContactNumber, @"^\d{10}$"))
+            {
+                return "Contact number should be of 10 digits.";
+            }
+            if (!Regex.IsMatch(appointmentDTO.PatientId, "^Sterling_[0-9]+$"))
+            {
+                return "Invalid patient ID format.";
+            }
+            if (appointmentDTO.Gender.ToLower() != "male" && appointmentDTO.Gender.ToLower() != "female" && appointmentDTO.Gender.ToLower() != "other")
+            {
+                return "Invalid gender. Gender should be Male, Female, or Other.";
+            }
+            List<string> validStatusList = new List<string> {"Scheduled", "Cancelled", "Rescheduled" };
+            if (!validStatusList.Contains(appointmentDTO.Status))
+            {
+                return "InValid Status Type";
+            }
+            return null;
         }
     }
 }

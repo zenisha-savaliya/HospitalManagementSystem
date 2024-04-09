@@ -1,15 +1,8 @@
 ﻿using Data.Interface;
 using Data.Models;
-using Data.Repository;
-using Microsoft.EntityFrameworkCore;
 using Service.DTO;
 using Service.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace Service.Service
 {
@@ -39,6 +32,21 @@ namespace Service.Service
         {
             try
             {
+                string validationMessage = ValidateCommonFields(registerDTO);
+                if (!string.IsNullOrEmpty(validationMessage))
+                {
+                    return validationMessage;
+                }
+                List<string> allowedSpecializations = new List<string> { "brain surgery", "physiotherapist", "eye specialist" };
+                if (!allowedSpecializations.Contains(Specialization.ToLower()))
+                {
+                    return "Invalid specialization. Specialization should be Brain Surgery, Physiotherapist, or Eye Specialist.";
+                }
+                bool userExists = await _userRepository.CheckUserExist(registerDTO.Email,registerDTO.FirstName);
+                if (userExists)
+                {
+                    return "User already exists";
+                }
                 if (await _doctorRepository.CheckSpecialization(Specialization))
                 {
                     return "Doctor already exists with this specialization";
@@ -77,21 +85,34 @@ namespace Service.Service
                         Specialist = Specialization,
                         UserId = userId
                     };
-                    await _doctorRepository.AddDoctor(doctor);
-                    EmailDTO emailDTO = new EmailDTO
+                    bool isDoctorAdded = await _doctorRepository.AddDoctor(doctor);
+                    if (isDoctorAdded)
                     {
-                        ToEmail = registerDTO.Email,
-                        Subject = "registering into our system as doctor",
-                        Body = $"<h4><b>Dear {registerDTO.FirstName},</b></h4><br><br>" +
-                                $"Welcome to our service. Your current password is <span style=\"color:blue;\">{registerDTO.Password}</span>. " +
-                                $"You can login using this password and can change your password."
-                    };
-                    bool isAdded = await _emailService.SendEmailAsync(emailDTO.ToEmail, emailDTO.Subject, emailDTO.Body);
-                    if(isAdded)
-                    {
-                        return "Doctor added successfully";
+                        EmailDTO emailDTO = new EmailDTO
+                        {
+                            ToEmail = registerDTO.Email,
+                            Subject = "registering into our system as doctor",
+                            Body = $"<h4><b>Dear {registerDTO.FirstName},</b></h4><br>" +
+                               $"Welcome to our service. Your current password is <span style=\"color:blue;\">{registerDTO.Password}</span>.<br> " +
+                               $"You can login using this password and can change your password."
+                        };
+                        bool isEmailSent = await _emailService.SendEmailAsync(emailDTO.ToEmail, emailDTO.Subject, emailDTO.Body);
+                        if (isEmailSent)
+                        {
+                            return "Doctor added successfully";
+                        }
+                        else
+                        {
+                            await _doctorRepository.RemoveDoctor(doctor);
+                            await _userRepository.RemoveUser(user);
+                            return "Doctor not added. Error occurred while sending registration email.";
+                        }
                     }
-                    return "doctor not added successfully";
+                    else
+                    {
+                        await _userRepository.RemoveUser(user);
+                        return "Doctor not added. Error occurred while adding doctor.";
+                    }
                     
                 }
             }
@@ -101,11 +122,20 @@ namespace Service.Service
                 return "Error while adding a doctor";
             }
         }
-
         public async Task<string> AddNurse(RegisterDTO registerDTO)
         {
             try
             {
+                string validationMessage = ValidateCommonFields(registerDTO);
+                if (!string.IsNullOrEmpty(validationMessage))
+                {
+                    return validationMessage;
+                }
+                bool userExists = await _userRepository.CheckUserExist(registerDTO.Email, registerDTO.FirstName);
+                if (userExists)
+                {
+                    return "User already exists";
+                }
                 if (await _nurseRepository.GetNurseCount() >= 10)
                 {
                     return "System already has 10 nurses";
@@ -138,7 +168,7 @@ namespace Service.Service
                         UserId = userId
                     };
 
-                    await _nurseRepository.AddNurse(nurse);
+                    bool isNurseAdded = await _nurseRepository.AddNurse(nurse);
                     EmailDTO emailDTO = new EmailDTO
                     {
                         ToEmail = registerDTO.Email,
@@ -147,8 +177,8 @@ namespace Service.Service
                                 $"Welcome to our service. Your current password is <span style=\"color:blue;\">{registerDTO.Password}</span>. " +
                                 $"You can login using this password and can change your password."
                     };
-                    bool isAdded = await _emailService.SendEmailAsync(emailDTO.ToEmail, emailDTO.Subject, emailDTO.Body);
-                    if (isAdded)
+                    bool isEmailSent = await _emailService.SendEmailAsync(emailDTO.ToEmail, emailDTO.Subject, emailDTO.Body);
+                    if (isNurseAdded && isEmailSent)
                     {
                         return "Nurse added successfully";
                     }
@@ -165,6 +195,11 @@ namespace Service.Service
         {
             try
             {
+                string validationMessage = ValidateCommonFields(registerDTO);
+                if (!string.IsNullOrEmpty(validationMessage))
+                {
+                    return validationMessage;
+                }
                 if (await _receptionistRepository.GetReceptionistCount() >= 2)
                 {
                     return "System already has 2 receptionists";
@@ -197,7 +232,7 @@ namespace Service.Service
                         UserId = userId
                     };
 
-                    await _receptionistRepository.AddReceptionist(nurse);
+                    bool isAdded = await _receptionistRepository.AddReceptionist(nurse);
                     EmailDTO emailDTO = new EmailDTO
                     {
                         ToEmail = registerDTO.Email,
@@ -206,8 +241,8 @@ namespace Service.Service
                          $"Welcome to our service. Your current password is <span style=\"color:blue;\">{registerDTO.Password}</span>. " +
                          $"You can login using this password and can change your password."
                     };
-                    bool isAdded = await _emailService.SendEmailAsync(emailDTO.ToEmail, emailDTO.Subject, emailDTO.Body);
-                    if (isAdded)
+                    bool isEmailSent = await _emailService.SendEmailAsync(emailDTO.ToEmail, emailDTO.Subject, emailDTO.Body);
+                    if (isAdded && isEmailSent)
                     {
                        return "Receptionist added successfully";
                     }
@@ -288,6 +323,43 @@ namespace Service.Service
 
             return doctorAppointments;
 
+        }
+
+        private bool IsValidEmail(string email)
+        {
+            string emailPattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+            return Regex.IsMatch(email, emailPattern);
+        }
+        private string ValidateCommonFields(RegisterDTO registerDTO)
+        {
+            if (string.IsNullOrEmpty(registerDTO.FirstName) || string.IsNullOrEmpty(registerDTO.LastName) ||
+                string.IsNullOrEmpty(registerDTO.Password) || string.IsNullOrEmpty(registerDTO.ContactNumber) ||
+                string.IsNullOrEmpty(registerDTO.Email) || registerDTO.DateOfBirth == null ||
+                string.IsNullOrEmpty(registerDTO.Gender) || string.IsNullOrEmpty(registerDTO.PostalCode))
+            {
+                return "All fields are required.";
+            }
+
+            if (registerDTO.Gender.ToLower() != "male" && registerDTO.Gender.ToLower() != "female" && registerDTO.Gender.ToLower() != "other")
+            {
+                return "Invalid gender. Gender should be Male, Female, or Other.";
+            }
+
+            if (!Regex.IsMatch(registerDTO.ContactNumber, @"^\d{10}$"))
+            {
+                return "Invalid contact number. Contact number should be 10 digits only.";
+            }
+
+            if (!IsValidEmail(registerDTO.Email))
+            {
+                return "Invalid email format.";
+            }
+            if (registerDTO.DateOfBirth >= DateTime.Today)
+            {
+                return "Invalid date of birth. Date of birth should be less than current date.";
+            }
+
+            return null; // Indicates validation success
         }
     }
 }

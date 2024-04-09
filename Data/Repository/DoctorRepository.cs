@@ -1,11 +1,6 @@
 ﻿using Data.Interface;
 using Data.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Data.Repository
 {
@@ -51,6 +46,21 @@ namespace Data.Repository
         {
             Doctor doctor = await _context.Doctors.FirstOrDefaultAsync(d => d.Specialist == specialization);
             return doctor?.DoctorId ?? 0;
+        }
+
+        public async Task<bool> RemoveDoctor(Doctor doctor)
+        {
+            try
+            {
+                _context.Doctors.Remove(doctor);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while removing doctor: {ex.Message}");
+                return false;
+            }
         }
     }
 }

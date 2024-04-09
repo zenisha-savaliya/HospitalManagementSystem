@@ -1,7 +1,6 @@
 ﻿using Data.Interface;
 using Data.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Numerics;
 
 namespace Data.Repository
 {

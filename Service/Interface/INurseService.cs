@@ -1,5 +1,4 @@
-﻿using Data.Models;
-using Service.DTO;
+﻿using Service.DTO;
 
 namespace Service.Interface
 {

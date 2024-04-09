@@ -1,12 +1,6 @@
 ﻿using Data.Interface;
 using Data.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Data.Repository
 {
@@ -41,6 +35,21 @@ namespace Data.Repository
         public async Task<int> GetNurseCount()
         {
             return await _context.Doctors.CountAsync();
+        }
+
+        public async Task<bool> RemoveNurse(Nurse nurse)
+        {
+            try
+            {
+                _context.Nurses.Remove(nurse);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while removing nurse: {ex.Message}");
+                return false;
+            }
         }
     }
 }

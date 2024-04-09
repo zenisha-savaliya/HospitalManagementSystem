@@ -1,5 +1,4 @@
 ﻿using Service.DTO;
-using System.Net.NetworkInformation;
 
 namespace Service.Interface
 {
