@@ -1,6 +1,7 @@
 ﻿using Data.Interface;
 using Data.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Numerics;
 
 namespace Data.Repository
 {
@@ -48,6 +49,21 @@ namespace Data.Repository
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred while adding a patient: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<bool> RemovePatient(Patient patient)
+        {
+            try
+            {
+                _context.Patients.Remove(patient);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while removing patient: {ex.Message}");
                 return false;
             }
         }

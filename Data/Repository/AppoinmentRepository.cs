@@ -1,6 +1,7 @@
 ﻿using Data.Interface;
 using Data.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Numerics;
 
 namespace Data.Repository
 {
@@ -73,6 +74,21 @@ namespace Data.Repository
             return await _context.Appointments
                                     .Where(a => a.PatientId == id)
                                     .ToListAsync();
+        }
+
+        public async Task<bool> RemoveAppointment(Appointment appointment)
+        {
+            try
+            {
+                _context.Appointments.Remove(appointment);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while removing appointment: {ex.Message}");
+                return false;
+            }
         }
     }
 }

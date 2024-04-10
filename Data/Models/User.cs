@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Data.Models
 {
@@ -40,6 +41,13 @@ namespace Data.Models
         [MinLength(5)]
         [MaxLength(10)]
         public string? PostalCode { get; set; }
+
+  
+        [ForeignKey("Role")]
+        public int RoleId { get; set; }
+
+        [JsonIgnore]
+        public virtual Role Roles { get; set; }
 
         [Required]
         public string Role { get; set; }

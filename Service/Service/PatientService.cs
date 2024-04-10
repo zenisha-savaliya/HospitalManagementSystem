@@ -32,7 +32,6 @@ namespace Service.Service
                     ScheduleStartTime = appoinment.ScheduleStartTime,
                     Status = appoinment.Status,
                     ConsultDoctor= appoinment.ConsultDoctor,
-                    
                 }).ToList();
                 return appoinmentViewsList;
         }

@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Service.Interface;
 
 namespace HospitalManagementSystem.Controllers
 {
+    [Authorize(Roles = "Patient")]
     public class PatientController : BaseController
     {
         private readonly IPatientService _patientService;

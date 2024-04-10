@@ -2,6 +2,7 @@
 using Data.Models;
 using Service.DTO;
 using Service.Interface;
+using System.Numerics;
 using System.Text.RegularExpressions;
 
 namespace Service.Service
@@ -14,8 +15,9 @@ namespace Service.Service
         private readonly IReceptionistRepository _receptionistRepository;
         private readonly IPatientRepository _patientRepository;
         private readonly IAppoinmentRepository _appoinmentRepository;
+        private readonly IEmailService _emailService;
 
-        public ReceptionistService(IDoctorRepository doctorRepository,IUserRepository userRepository,INurseRepository nurseRepository,IReceptionistRepository receptionistRepository,IPatientRepository patientRepository,IAppoinmentRepository appoinmentRepository)
+        public ReceptionistService(IDoctorRepository doctorRepository,IUserRepository userRepository,INurseRepository nurseRepository,IReceptionistRepository receptionistRepository,IPatientRepository patientRepository,IAppoinmentRepository appoinmentRepository,IEmailService emailService)
         {
             _doctorRepository = doctorRepository;
             _userRepository = userRepository;
@@ -23,6 +25,7 @@ namespace Service.Service
             _receptionistRepository = receptionistRepository;
             _patientRepository = patientRepository;
             _appoinmentRepository = appoinmentRepository;
+            _emailService = emailService;
         }
         public async Task<string> ScheduleAppoinment(AppointmentDTO appointmentDTO)
         {
@@ -57,8 +60,32 @@ namespace Service.Service
                     Status = appointmentDTO.Status,
                     ConsultDoctor = appointmentDTO.ConsultDoctor,
                 };
-                await _appoinmentRepository.AddAppointment(appointment);
-                return "Appointment scheduled successfully.";
+                bool isAppoinmentSchedulled= await _appoinmentRepository.AddAppointment(appointment);
+                if (isAppoinmentSchedulled)
+                {
+                    EmailDTO emailDTO = new EmailDTO
+                    {
+                        ToEmail = appointmentDTO.Email,
+                        Subject = "Appoinment Schedule at Sterling Hospital",
+                        Body = $"<h4><b>Dear {appointmentDTO.FirstName} {appointmentDTO.LastName},</b></h4><br>" +
+                        $"Your appointment has been scheduled successfully for {appointmentDTO.ScheduleStartTime}.<br>" +
+                        $"Thank you."
+                    };
+                    bool isEmailSent = await _emailService.SendEmailAsync(emailDTO.ToEmail, emailDTO.Subject, emailDTO.Body);
+                    if (isEmailSent)
+                    {
+                        return "Appoinment scheduled successfully";
+                    }
+                    else
+                    {
+                        await _appoinmentRepository.RemoveAppointment(appointment);
+                        return "Appoinment is not scheduled, Error occurred while sending registration email.";
+                    }
+                }
+                else
+                {
+                    return "Appointment is not scheduled successfully.";
+                }
             }
             else
             {
@@ -88,9 +115,8 @@ namespace Service.Service
                     PostalCode = appointmentDTO.PostalCode,
                     UserId = userId
                 };
-                await _patientRepository.RegisterPatient(patient);
+                bool isUserAdded = await _patientRepository.RegisterPatient(patient);
                 int patientIdFromDTO;
-
                 string numericPart = ExtractNumericPart(appointmentDTO.PatientId);
                 int.TryParse(numericPart, out patientIdFromDTO);
 
@@ -104,8 +130,34 @@ namespace Service.Service
                     Status = appointmentDTO.Status,
                     ConsultDoctor = appointmentDTO.ConsultDoctor,
                 };
-                await _appoinmentRepository.AddAppointment(appointment);
-                return "Patient profile created and appointment scheduled successfully.";
+                bool isAppoinmentAdded = await _appoinmentRepository.AddAppointment(appointment);
+                if(isAppoinmentAdded)
+                {
+                    EmailDTO emailDTO = new EmailDTO
+                    {
+                        ToEmail = appointmentDTO.Email,
+                        Subject = "Appoinment Schdule with registration",
+                        Body = $"<h4><b>Dear {appointmentDTO.FirstName},</b></h4><br>" +
+                       $"Your registration is successful.your password is {password}.You can login into our system using this password and can change it<br>" +
+                       $"Your appointment has been scheduled successfully for {appointmentDTO.ScheduleStartTime}.<br>" +
+                       $"Thank you."
+                    };
+                    bool isEmailSent = await _emailService.SendEmailAsync(emailDTO.ToEmail, emailDTO.Subject, emailDTO.Body);
+                    if (!isEmailSent)
+                    {
+                        return "Registration email not sent. Error occurred while sending registration email.";
+                    }
+                    else
+                    {
+                        return "Patient registration successfull with scheduling an appoinment";
+                    }
+                }
+                else
+                {
+                    await _userRepository.RemoveUser(user);
+                    await _patientRepository.RemovePatient(patient);
+                    return "Appointment is not scheduled successfully and patient profile is not created";
+                }
             }
         }
 
