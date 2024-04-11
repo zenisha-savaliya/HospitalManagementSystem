@@ -8,6 +8,7 @@ namespace Service.Service
 {
     public class DoctorService : IDoctorService
     {
+        #region Fields
         private readonly IDoctorRepository _doctorRepository;
         private readonly IUserRepository _userRepository;
         private readonly INurseRepository _nurseRepository;
@@ -16,8 +17,12 @@ namespace Service.Service
         private readonly IDutyRepository _dutyRepository;
         private readonly IAppoinmentRepository _appoinmentRepository;
         private readonly IEmailService _emailService;
+        private readonly IHashPasswordService _hashPasswordService;
+        #endregion
 
-        public DoctorService(IDoctorRepository doctorRepository,IUserRepository userRepository,INurseRepository nurseRepository,IReceptionistRepository receptionistRepository,IPatientRepository patientRepository,IDutyRepository dutyRepository,IAppoinmentRepository appoinmentRepository,IEmailService emailService)
+        #region Constructor
+
+        public DoctorService(IDoctorRepository doctorRepository,IUserRepository userRepository,INurseRepository nurseRepository,IReceptionistRepository receptionistRepository,IPatientRepository patientRepository,IDutyRepository dutyRepository,IAppoinmentRepository appoinmentRepository,IEmailService emailService,IHashPasswordService hashPasswordService)
         {
             _doctorRepository = doctorRepository;
             _userRepository = userRepository;
@@ -27,7 +32,11 @@ namespace Service.Service
             _dutyRepository = dutyRepository;
             _appoinmentRepository = appoinmentRepository;
             _emailService = emailService;
+            _hashPasswordService = hashPasswordService;
         }
+        #endregion
+
+        #region Methods
         public async Task<string> AddDoctor(RegisterDTO registerDTO, string Specialization)
         {
             try
@@ -61,7 +70,7 @@ namespace Service.Service
                     {
                         FirstName = registerDTO.FirstName,
                         LastName = registerDTO.LastName,
-                        Password = registerDTO.Password,
+                        Password = _hashPasswordService.HashPassword(registerDTO.Password),
                         ContactNumber = registerDTO.ContactNumber,
                         Email = registerDTO.Email,
                         DateOfBirth = registerDTO.DateOfBirth,
@@ -76,7 +85,7 @@ namespace Service.Service
                     {
                         FirstName = registerDTO.FirstName,
                         LastName = registerDTO.LastName,
-                        Password = registerDTO.Password,
+                        Password = _hashPasswordService.HashPassword(registerDTO.Password),
                         ContactNumber = registerDTO.ContactNumber,
                         Email = registerDTO.Email,
                         DateOfBirth = registerDTO.DateOfBirth,
@@ -94,7 +103,7 @@ namespace Service.Service
                             Subject = "registering into our system as doctor",
                             Body = $"<h4><b>Dear {registerDTO.FirstName},</b></h4><br>" +
                                $"Welcome to our service. Your current password is <span style=\"color:blue;\">{registerDTO.Password}</span>.<br> " +
-                               $"You can login using this password and can change your password."
+                               $"You can login using this password."
                         };
                         bool isEmailSent = await _emailService.SendEmailAsync(emailDTO.ToEmail, emailDTO.Subject, emailDTO.Body);
                         if (isEmailSent)
@@ -146,7 +155,7 @@ namespace Service.Service
                     {
                         FirstName = registerDTO.FirstName,
                         LastName = registerDTO.LastName,
-                        Password = registerDTO.Password,
+                        Password = _hashPasswordService.HashPassword(registerDTO.Password),
                         ContactNumber = registerDTO.ContactNumber,
                         Email = registerDTO.Email,
                         DateOfBirth = registerDTO.DateOfBirth,
@@ -159,7 +168,7 @@ namespace Service.Service
                     {
                         FirstName = registerDTO.FirstName,
                         LastName = registerDTO.LastName,
-                        Password = registerDTO.Password,
+                        Password = _hashPasswordService.HashPassword(registerDTO.Password),
                         ContactNumber = registerDTO.ContactNumber,
                         Email = registerDTO.Email,
                         DateOfBirth = registerDTO.DateOfBirth,
@@ -175,7 +184,7 @@ namespace Service.Service
                         Subject = "registering into our system as nurse",
                         Body = $"<h4><b>Dear {registerDTO.FirstName},</b></h4><br><br>" +
                                 $"Welcome to our service. Your current password is <span style=\"color:blue;\">{registerDTO.Password}</span>. " +
-                                $"You can login using this password and can change your password."
+                                $"You can login using this password.<br><br>"
                     };
                     bool isEmailSent = await _emailService.SendEmailAsync(emailDTO.ToEmail, emailDTO.Subject, emailDTO.Body);
                     if (isNurseAdded && isEmailSent)
@@ -210,7 +219,7 @@ namespace Service.Service
                     {
                         FirstName = registerDTO.FirstName,
                         LastName = registerDTO.LastName,
-                        Password = registerDTO.Password,
+                        Password = _hashPasswordService.HashPassword(registerDTO.Password),
                         ContactNumber = registerDTO.ContactNumber,
                         Email = registerDTO.Email,
                         DateOfBirth = registerDTO.DateOfBirth,
@@ -223,7 +232,7 @@ namespace Service.Service
                     {
                         FirstName = registerDTO.FirstName,
                         LastName = registerDTO.LastName,
-                        Password = registerDTO.Password,
+                        Password = _hashPasswordService.HashPassword(registerDTO.Password),
                         ContactNumber = registerDTO.ContactNumber,
                         Email = registerDTO.Email,
                         DateOfBirth = registerDTO.DateOfBirth,
@@ -239,7 +248,7 @@ namespace Service.Service
                         Subject = "registering into our system as receptionist",
                         Body = $"<h4><b>Dear {registerDTO.FirstName},</b></h4><br><br>" +
                          $"Welcome to our service. Your current password is <span style=\"color:blue;\">{registerDTO.Password}</span>. " +
-                         $"You can login using this password and can change your password."
+                         $"You can login using this password.<br><br>"
                     };
                     bool isEmailSent = await _emailService.SendEmailAsync(emailDTO.ToEmail, emailDTO.Subject, emailDTO.Body);
                     if (isAdded && isEmailSent)
@@ -315,7 +324,7 @@ namespace Service.Service
             .Select(a => new DoctorAppointmentViewDTO
             {
                 PatientProblem = a.PatientProblem,
-                PatientId = a.PatientId.ToString(), 
+                PatientId = "Sterling_" + a.PatientId.ToString(), 
                 ScheduleStartTime = a.ScheduleStartTime,
                 Status = a.Status
             })
@@ -324,7 +333,9 @@ namespace Service.Service
             return doctorAppointments;
 
         }
+        #endregion
 
+        #region ValidationsMethods
         private bool IsValidEmail(string email)
         {
             string emailPattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
@@ -359,8 +370,9 @@ namespace Service.Service
                 return "Invalid date of birth. Date of birth should be less than current date.";
             }
 
-            return null; // Indicates validation success
+            return null; 
         }
+        #endregion
     }
 }
 

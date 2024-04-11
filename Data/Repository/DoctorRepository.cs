@@ -28,24 +28,56 @@ namespace Data.Repository
 
         public async Task<bool> CheckDoctorExist(int id)
         {
-            return await _context.Doctors.AnyAsync(d => d.DoctorId == id);
+            try
+            {
+                return await _context.Doctors.AnyAsync(d => d.DoctorId == id);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
         }
 
         public async Task<bool> CheckSpecialization(string Specialization)
         {
-            bool exists = await _context.Doctors.AnyAsync(d => d.Specialist == Specialization);
-            return exists;
+            try
+            {
+                bool exists = await _context.Doctors.AnyAsync(d => d.Specialist == Specialization);
+                return exists;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
         }
 
         public async Task<int> GetDoctorCount()
         {
-           return await _context.Doctors.CountAsync();
+            try
+            {
+                return await _context.Doctors.CountAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return -1; 
+            }
         }
 
         public async Task<int> GetDoctorIdBySpecialization(string specialization)
         {
-            Doctor doctor = await _context.Doctors.FirstOrDefaultAsync(d => d.Specialist == specialization);
-            return doctor?.DoctorId ?? 0;
+            try
+            {
+                Doctor doctor = await _context.Doctors.FirstOrDefaultAsync(d => d.Specialist == specialization);
+                return doctor?.DoctorId ?? 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return 0;
+            }
         }
 
         public async Task<bool> RemoveDoctor(Doctor doctor)

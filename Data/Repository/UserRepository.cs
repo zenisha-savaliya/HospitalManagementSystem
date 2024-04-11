@@ -13,22 +13,38 @@ namespace Data.Repository
         }
         public async Task<int> RegisterUser(User user)
         {
-            await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
-            return await GetUserId(user);
+            try
+            {
+                await _context.Users.AddAsync(user);
+                await _context.SaveChangesAsync();
+                return await GetUserId(user);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while registering the user: {ex.Message}");
+                return -1; 
+            }
         }
 
-        public async Task<int> GetUserId(User user)
+        public Task<int> GetUserId(User user)
         {
-            return user.UserId;
+            return Task.FromResult(user.UserId);
         }
 
         public async Task<bool> CheckUserExist(string Email, string FirstName)
         {
-            bool exists = await _context.Users
-                .AnyAsync(u => u.Email == Email || u.FirstName == FirstName);
+            try
+            {
+                bool exists = await _context.Users
+                    .AnyAsync(u => u.Email == Email || u.FirstName == FirstName);
 
-            return exists;
+                return exists;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while checking user existence: {ex.Message}");
+                return false; 
+            }
         }
 
         public async Task<bool> RemoveUser(User user)

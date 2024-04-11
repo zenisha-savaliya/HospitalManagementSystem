@@ -28,9 +28,17 @@ namespace Data.Repository
 
         public async Task<List<Duty>> GetDutyList(int id)
         {
-            return await _context.Duty
-                .Where(d => d.NurseId == id)
-                .ToListAsync();
+            try
+            {
+                return await _context.Duty
+                    .Where(d => d.NurseId == id)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return new List<Duty>(); 
+            }
         }
     }
 }

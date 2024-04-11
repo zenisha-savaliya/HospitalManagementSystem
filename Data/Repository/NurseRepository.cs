@@ -29,12 +29,28 @@ namespace Data.Repository
 
         public async Task<bool> CheckNurseExist(int id)
         {
-            return await _context.Nurses.AnyAsync(n => n.NurseId == id);
+            try
+            {
+                return await _context.Nurses.AnyAsync(n => n.NurseId == id);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
         }
 
         public async Task<int> GetNurseCount()
         {
-            return await _context.Doctors.CountAsync();
+            try
+            {
+                return await _context.Nurses.CountAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return -1; 
+            }
         }
 
         public async Task<bool> RemoveNurse(Nurse nurse)

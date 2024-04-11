@@ -32,6 +32,7 @@ builder.Services.AddScoped<IReceptionistService, ReceptionistService>();
 builder.Services.AddScoped<IReceptionistRepository, ReceptionistRepository>();
 builder.Services.AddScoped<IAppoinmentRepository, AppoinmentRepository>();
 builder.Services.AddScoped<IDutyRepository, DutyRepository>();
+builder.Services.AddScoped<IHashPasswordService, HashPasswordService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters

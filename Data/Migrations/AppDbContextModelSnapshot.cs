@@ -62,7 +62,7 @@ namespace Data.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("Appointments", (string)null);
+                    b.ToTable("Appointments");
                 });
 
             modelBuilder.Entity("Data.Models.Doctor", b =>
@@ -120,7 +120,22 @@ namespace Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Doctors", (string)null);
+                    b.ToTable("Doctors");
+
+                    b.HasData(
+                        new
+                        {
+                            DoctorId = 1,
+                            ContactNumber = "1234567890",
+                            DateOfBirth = new DateTime(2003, 8, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "zenishasavaliya96@gmail.com",
+                            FirstName = "zenisha",
+                            Gender = "Female",
+                            LastName = "savaliya",
+                            Password = "e606e38b0d8c19b24cf0ee3808183162ea7cd63ff7912dbb22b5e803286b4446",
+                            Specialist = "Brain Surgery",
+                            UserId = 1
+                        });
                 });
 
             modelBuilder.Entity("Data.Models.Duty", b =>
@@ -151,7 +166,7 @@ namespace Data.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("Duty", (string)null);
+                    b.ToTable("Duty");
                 });
 
             modelBuilder.Entity("Data.Models.Nurse", b =>
@@ -204,7 +219,7 @@ namespace Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Nurses", (string)null);
+                    b.ToTable("Nurses");
                 });
 
             modelBuilder.Entity("Data.Models.Patient", b =>
@@ -257,7 +272,7 @@ namespace Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Patients", (string)null);
+                    b.ToTable("Patients");
                 });
 
             modelBuilder.Entity("Data.Models.Receptionist", b =>
@@ -310,24 +325,7 @@ namespace Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Receptionists", (string)null);
-                });
-
-            modelBuilder.Entity("Data.Models.Role", b =>
-                {
-                    b.Property<int>("RoleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoleId"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("RoleId");
-
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Receptionists");
                 });
 
             modelBuilder.Entity("Data.Models.User", b =>
@@ -379,7 +377,21 @@ namespace Data.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 1,
+                            ContactNumber = "1234567890",
+                            DateOfBirth = new DateTime(2003, 8, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "zenishasavaliya96@gmail.com",
+                            FirstName = "zenisha",
+                            Gender = "Female",
+                            LastName = "savaliya",
+                            Password = "e606e38b0d8c19b24cf0ee3808183162ea7cd63ff7912dbb22b5e803286b4446",
+                            Role = "Doctor"
+                        });
                 });
 
             modelBuilder.Entity("Data.Models.Appointment", b =>

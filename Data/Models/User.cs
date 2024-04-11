@@ -42,13 +42,6 @@ namespace Data.Models
         [MaxLength(10)]
         public string? PostalCode { get; set; }
 
-  
-        [ForeignKey("Role")]
-        public int RoleId { get; set; }
-
-        [JsonIgnore]
-        public virtual Role Roles { get; set; }
-
         [Required]
         public string Role { get; set; }
     }

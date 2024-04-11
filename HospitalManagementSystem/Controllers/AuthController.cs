@@ -6,11 +6,18 @@ namespace HospitalManagementSystem.Controllers
 {
     public class AuthController : BaseController
     {
+        #region Properties
         private readonly IAuthService _authService;
+        #endregion
+
+        #region Constructor
         public AuthController(IAuthService authService)
         {
             _authService = authService;
         }
+        #endregion
+
+        #region Authendpoints
         [HttpPost]
         [Route("/LoginByEmail")]
         public async Task<IActionResult> LoginByEmail([FromBody] LoginWithEmail loginWithEmail)
@@ -24,5 +31,6 @@ namespace HospitalManagementSystem.Controllers
         {
             return Ok(await _authService.LoginWithMobileNUmber(loginWithMobileNumber));
         }
+        #endregion
     }
 }

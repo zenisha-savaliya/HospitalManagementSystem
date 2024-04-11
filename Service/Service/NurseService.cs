@@ -7,11 +7,18 @@ namespace Service.Service
 {
     public class NurseService : INurseService
     {
+        #region Fields
         private readonly IDutyRepository _dutyRepository;
+        #endregion
+
+        #region Constructor
         public NurseService(IDutyRepository dutyRepository)
         {
             _dutyRepository = dutyRepository;
         }
+        #endregion
+
+        #region Methods
         public async Task<List<SeeDutyDTO>> SeeDuties(int id)
         {
             List<Duty>dutyList = await _dutyRepository.GetDutyList(id);
@@ -25,5 +32,6 @@ namespace Service.Service
 
             return seeDutyDTOList;
         }
+        #endregion
     }
 }

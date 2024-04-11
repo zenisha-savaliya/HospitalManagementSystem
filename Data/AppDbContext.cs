@@ -11,6 +11,35 @@ namespace Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>().HasData(
+                new User
+                {
+                    UserId = 1,
+                    FirstName = "zenisha",
+                    LastName = "savaliya",
+                    Password = "e606e38b0d8c19b24cf0ee3808183162ea7cd63ff7912dbb22b5e803286b4446",
+                    ContactNumber = "1234567890",
+                    Email = "zenishasavaliya96@gmail.com",
+                    DateOfBirth = new DateTime(2003, 08, 15),
+                    Gender = "Female",
+                    Role = "Doctor"
+                });
+
+            modelBuilder.Entity<Doctor>().HasData(
+                new Doctor
+                {
+                    DoctorId = 1,
+                    FirstName = "zenisha",
+                    LastName = "savaliya",
+                    Password = "e606e38b0d8c19b24cf0ee3808183162ea7cd63ff7912dbb22b5e803286b4446",
+                    ContactNumber = "1234567890",
+                    Email = "zenishasavaliya96@gmail.com",
+                    DateOfBirth = new DateTime(2003, 08, 15),
+                    Gender = "Female",
+                    Specialist = "Brain Surgery",
+                    UserId = 1
+                });
+
             modelBuilder.Entity<Appointment>()
                 .HasOne(a => a.Patient)
                 .WithMany()
@@ -42,7 +71,6 @@ namespace Data
                 .OnDelete(DeleteBehavior.Restrict);
         }
         public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }
         public DbSet<Doctor> Doctors { get; set; }
         public DbSet<Nurse> Nurses { get; set; }
         public DbSet<Patient> Patients { get; set; }

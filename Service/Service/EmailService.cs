@@ -7,12 +7,18 @@ namespace Service.Service
 {
     public class EmailService : IEmailService
     {
+        #region Fields
         private readonly IConfiguration _configuration;
+        #endregion
 
+        #region Constructor
         public EmailService(IConfiguration configuration)
         {
             _configuration = configuration;
         }
+        #endregion
+
+        #region SendMailMethod
 
         public async Task<bool> SendEmailAsync(string toEmail, string subject, string body)
         {
@@ -48,7 +54,8 @@ namespace Service.Service
                 return false;
             }
         }
-        
+        #endregion
+
     }
 }
 

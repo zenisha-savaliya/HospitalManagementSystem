@@ -29,26 +29,28 @@ namespace Data.Repository
 
         public async Task<User> CheckUserAuthByEmailAsync(string email, string password)
         {
-            User user = await _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(email) && u.Password.Equals(password));
-            if(user != null)
+            try
             {
+                User user = await _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(email) && u.Password.Equals(password));
                 return user;
             }
-            else
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 return null;
             }
         }
 
         public async Task<User> CheckUserAuthByMobileNumberAsync(string mobilenumber, string password)
         {
-            User user = await _context.Users.FirstOrDefaultAsync(u => u.ContactNumber.Equals(mobilenumber) && u.Password.Equals(password));
-            if (user != null)
+            try
             {
+                User user = await _context.Users.FirstOrDefaultAsync(u => u.ContactNumber.Equals(mobilenumber) && u.Password.Equals(password));
                 return user;
             }
-            else
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 return null;
             }
         }

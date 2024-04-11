@@ -28,7 +28,15 @@ namespace Data.Repository
 
         public async Task<int> GetReceptionistCount()
         {
-            return await _context.Receptionists.CountAsync();
+            try
+            {
+                return await _context.Receptionists.CountAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while fetching receptionist count: {ex.Message}");
+                return -1; 
+            }
         }
     }
 }

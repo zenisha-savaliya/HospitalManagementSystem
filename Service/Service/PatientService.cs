@@ -7,11 +7,18 @@ namespace Service.Service
 {
     public class PatientService : IPatientService
     {
+        #region Fields
         private readonly IAppoinmentRepository _appoinmentRepository;
+        #endregion
+
+        #region Constructor
         public PatientService(IAppoinmentRepository appoinmentRepository)
         {
             _appoinmentRepository = appoinmentRepository;
         }
+        #endregion
+
+        #region Methods
         public async Task<AppoinmentViewDTO> GetAppoinmentDetail(int id)
         {
             Appointment appointment = await _appoinmentRepository.GetAppointment(id);
@@ -35,5 +42,6 @@ namespace Service.Service
                 }).ToList();
                 return appoinmentViewsList;
         }
+        #endregion
     }
 }

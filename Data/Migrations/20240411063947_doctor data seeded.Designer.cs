@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240408070212_first")]
-    partial class first
+    [Migration("20240411063947_doctor data seeded")]
+    partial class doctordataseeded
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,9 +42,6 @@ namespace Data.Migrations
                         .HasMaxLength(40)
                         .HasColumnType("nvarchar(40)");
 
-                    b.Property<int>("DoctorId")
-                        .HasColumnType("int");
-
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
 
@@ -66,8 +63,6 @@ namespace Data.Migrations
 
                     b.HasKey("AppoinmentId");
 
-                    b.HasIndex("DoctorId");
-
                     b.HasIndex("PatientId");
 
                     b.ToTable("Appointments");
@@ -86,7 +81,7 @@ namespace Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("date");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -129,6 +124,21 @@ namespace Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Doctors");
+
+                    b.HasData(
+                        new
+                        {
+                            DoctorId = 1,
+                            ContactNumber = "1234567890",
+                            DateOfBirth = new DateTime(2003, 8, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "zenishasavaliya96@gmail.com",
+                            FirstName = "zenisha",
+                            Gender = "Female",
+                            LastName = "savaliya",
+                            Password = "e606e38b0d8c19b24cf0ee3808183162ea7cd63ff7912dbb22b5e803286b4446",
+                            Specialist = "Brain Surgery",
+                            UserId = 1
+                        });
                 });
 
             modelBuilder.Entity("Data.Models.Duty", b =>
@@ -139,15 +149,25 @@ namespace Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DutyId"));
 
-                    b.Property<bool>("IsDutyAssigned")
-                        .HasColumnType("bit");
+                    b.Property<DateTime>("AdmittedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("int");
 
                     b.Property<int>("NurseId")
                         .HasColumnType("int");
 
+                    b.Property<int>("PatientId")
+                        .HasColumnType("int");
+
                     b.HasKey("DutyId");
 
+                    b.HasIndex("DoctorId");
+
                     b.HasIndex("NurseId");
+
+                    b.HasIndex("PatientId");
 
                     b.ToTable("Duty");
                 });
@@ -165,7 +185,7 @@ namespace Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("date");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -218,7 +238,7 @@ namespace Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("date");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -271,7 +291,7 @@ namespace Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("date");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -324,7 +344,7 @@ namespace Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("date");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -361,23 +381,29 @@ namespace Data.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 1,
+                            ContactNumber = "1234567890",
+                            DateOfBirth = new DateTime(2003, 8, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "zenishasavaliya96@gmail.com",
+                            FirstName = "zenisha",
+                            Gender = "Female",
+                            LastName = "savaliya",
+                            Password = "e606e38b0d8c19b24cf0ee3808183162ea7cd63ff7912dbb22b5e803286b4446",
+                            Role = "Doctor"
+                        });
                 });
 
             modelBuilder.Entity("Data.Models.Appointment", b =>
                 {
-                    b.HasOne("Data.Models.Doctor", "Doctor")
-                        .WithMany()
-                        .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Data.Models.Patient", "Patient")
                         .WithMany()
                         .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Doctor");
 
                     b.Navigation("Patient");
                 });
@@ -395,13 +421,29 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Models.Duty", b =>
                 {
+                    b.HasOne("Data.Models.Doctor", "Doctor")
+                        .WithMany()
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Data.Models.Nurse", "Nurse")
                         .WithMany()
                         .HasForeignKey("NurseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Data.Models.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+
                     b.Navigation("Nurse");
+
+                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("Data.Models.Nurse", b =>

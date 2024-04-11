@@ -12,44 +12,80 @@ namespace Service.Service
 {
     public class AuthService : IAuthService
     {
+        #region Fields
         private readonly IAuthRepository _authRepository;
         private readonly IConfiguration _config;
-        public AuthService(IAuthRepository authRepository,IConfiguration configuration)
+        private readonly IHashPasswordService _hashPasswordService;
+        #endregion
+
+        #region Constructor
+        public AuthService(IAuthRepository authRepository,IConfiguration configuration,IHashPasswordService hashPasswordService)
         {
             _config = configuration;
             _authRepository = authRepository;
+            _hashPasswordService = hashPasswordService;
         }
+        #endregion
+
+        #region Methods
         public async Task<string> LoginByEmail(LoginWithEmail loginWithEmail)
         {
-            User user = await _authRepository.CheckUserAuthByEmailAsync(loginWithEmail.Email, loginWithEmail.Password);
-            if (user != null)
+            try
             {
-                return GenerateToken(user);
+                string HashPassword = _hashPasswordService.HashPassword(loginWithEmail.Password);
+                User user = await _authRepository.CheckUserAuthByEmailAsync(loginWithEmail.Email, HashPassword);
+                if (user != null)
+                {
+                    return GenerateToken(user);
+                }
+                else
+                {
+                    return "Please enter valid credentials";
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return "Please enter valid credentials";
+                Console.WriteLine(ex.ToString());
+                return "An error occurred while processing your request. Please try again later.";
             }
         }
 
         public async Task<string> LoginWithMobileNUmber(LoginWithMobileNumber loginWithMobileNumber)
         {
-            User user = await _authRepository.CheckUserAuthByMobileNumberAsync(loginWithMobileNumber.ContactNumber, loginWithMobileNumber.Password);
-            if (user != null)
+            try
             {
-                return GenerateToken(user);
+                string HashPassword = _hashPasswordService.HashPassword(loginWithMobileNumber.Password);
+                User user = await _authRepository.CheckUserAuthByMobileNumberAsync(loginWithMobileNumber.ContactNumber, HashPassword);
+                if (user != null)
+                {
+                    return GenerateToken(user);
+                }
+                else
+                {
+                    return "Please enter valid credentials";
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return "Please enter valid credentials";
+                Console.WriteLine(ex.ToString());
+                return "An error occurred while processing your request. Please try again later.";
             }
         }
+        #endregion
 
+        /// <summary>
+        /// This method is used for generating JWT token
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+
+        #region TokenGenerationMethod
         private string GenerateToken(User user)
         {
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Role,user.Role),
+                new Claim("Id", user.UserId.ToString()),
             };
 
 
@@ -62,5 +98,6 @@ namespace Service.Service
                 signingCredentials: credentials);
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+        #endregion
     }
 }

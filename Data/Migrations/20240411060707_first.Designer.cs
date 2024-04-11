@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240409052257_duty table and dbcontext changed")]
-    partial class dutytableanddbcontextchanged
+    [Migration("20240411060707_first")]
+    partial class first
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -366,6 +366,20 @@ namespace Data.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 1,
+                            ContactNumber = "1234567890",
+                            DateOfBirth = new DateTime(2003, 8, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "zenishasavaliya96@gmail.com",
+                            FirstName = "zenisha",
+                            Gender = "Female",
+                            LastName = "savaliya",
+                            Password = "e606e38b0d8c19b24cf0ee3808183162ea7cd63ff7912dbb22b5e803286b4446",
+                            Role = "Doctor"
+                        });
                 });
 
             modelBuilder.Entity("Data.Models.Appointment", b =>

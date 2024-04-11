@@ -22,7 +22,7 @@ namespace Data.Migrations
                     Password = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
                     ContactNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateOfBirth = table.Column<DateTime>(type: "date", nullable: false),
                     Gender = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false),
                     PostalCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -43,7 +43,7 @@ namespace Data.Migrations
                     Password = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
                     ContactNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateOfBirth = table.Column<DateTime>(type: "date", nullable: false),
                     Gender = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false),
                     PostalCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
                     Specialist = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
@@ -71,7 +71,7 @@ namespace Data.Migrations
                     Password = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
                     ContactNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateOfBirth = table.Column<DateTime>(type: "date", nullable: false),
                     Gender = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false),
                     PostalCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
                     UserId = table.Column<int>(type: "int", nullable: false)
@@ -98,7 +98,7 @@ namespace Data.Migrations
                     Password = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
                     ContactNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateOfBirth = table.Column<DateTime>(type: "date", nullable: false),
                     Gender = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false),
                     PostalCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
                     UserId = table.Column<int>(type: "int", nullable: false)
@@ -125,7 +125,7 @@ namespace Data.Migrations
                     Password = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
                     ContactNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateOfBirth = table.Column<DateTime>(type: "date", nullable: false),
                     Gender = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false),
                     PostalCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
                     UserId = table.Column<int>(type: "int", nullable: false)
@@ -142,26 +142,6 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Duty",
-                columns: table => new
-                {
-                    DutyId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IsDutyAssigned = table.Column<bool>(type: "bit", nullable: false),
-                    NurseId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Duty", x => x.DutyId);
-                    table.ForeignKey(
-                        name: "FK_Duty_Nurses_NurseId",
-                        column: x => x.NurseId,
-                        principalTable: "Nurses",
-                        principalColumn: "NurseId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Appointments",
                 columns: table => new
                 {
@@ -170,7 +150,6 @@ namespace Data.Migrations
                     PatientProblem = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     PatientId = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: true),
-                    DoctorId = table.Column<int>(type: "int", nullable: false),
                     ScheduleStartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ScheduleEndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
@@ -180,12 +159,6 @@ namespace Data.Migrations
                 {
                     table.PrimaryKey("PK_Appointments", x => x.AppoinmentId);
                     table.ForeignKey(
-                        name: "FK_Appointments_Doctors_DoctorId",
-                        column: x => x.DoctorId,
-                        principalTable: "Doctors",
-                        principalColumn: "DoctorId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
                         name: "FK_Appointments_Patients_PatientId",
                         column: x => x.PatientId,
                         principalTable: "Patients",
@@ -193,10 +166,44 @@ namespace Data.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Appointments_DoctorId",
-                table: "Appointments",
-                column: "DoctorId");
+            migrationBuilder.CreateTable(
+                name: "Duty",
+                columns: table => new
+                {
+                    DutyId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NurseId = table.Column<int>(type: "int", nullable: false),
+                    DoctorId = table.Column<int>(type: "int", nullable: false),
+                    PatientId = table.Column<int>(type: "int", nullable: false),
+                    AdmittedTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Duty", x => x.DutyId);
+                    table.ForeignKey(
+                        name: "FK_Duty_Doctors_DoctorId",
+                        column: x => x.DoctorId,
+                        principalTable: "Doctors",
+                        principalColumn: "DoctorId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Duty_Nurses_NurseId",
+                        column: x => x.NurseId,
+                        principalTable: "Nurses",
+                        principalColumn: "NurseId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Duty_Patients_PatientId",
+                        column: x => x.PatientId,
+                        principalTable: "Patients",
+                        principalColumn: "PatientId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "UserId", "ContactNumber", "DateOfBirth", "Email", "FirstName", "Gender", "LastName", "Password", "PostalCode", "Role" },
+                values: new object[] { 1, "1234567890", new DateTime(2003, 8, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), "zenishasavaliya96@gmail.com", "zenisha", "Female", "savaliya", "e606e38b0d8c19b24cf0ee3808183162ea7cd63ff7912dbb22b5e803286b4446", null, "Doctor" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Appointments_PatientId",
@@ -209,9 +216,19 @@ namespace Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Duty_DoctorId",
+                table: "Duty",
+                column: "DoctorId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Duty_NurseId",
                 table: "Duty",
                 column: "NurseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Duty_PatientId",
+                table: "Duty",
+                column: "PatientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Nurses_UserId",
@@ -245,10 +262,10 @@ namespace Data.Migrations
                 name: "Doctors");
 
             migrationBuilder.DropTable(
-                name: "Patients");
+                name: "Nurses");
 
             migrationBuilder.DropTable(
-                name: "Nurses");
+                name: "Patients");
 
             migrationBuilder.DropTable(
                 name: "Users");

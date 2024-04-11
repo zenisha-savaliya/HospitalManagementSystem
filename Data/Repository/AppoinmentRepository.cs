@@ -51,29 +51,61 @@ namespace Data.Repository
 
         public async Task<List<Appointment>> CheckAppointments(string consultDoctor)
         {
-            return await _context.Appointments
-                .Where(a => a.ConsultDoctor == consultDoctor)
-                .ToListAsync();
+            try
+            {
+                return await _context.Appointments
+                    .Where(a => a.ConsultDoctor == consultDoctor)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return new List<Appointment>();
+            }
         }
 
         public async Task<bool> CheckDoctorAvailability(string consultDoctor, DateTime startTime)
         {
-            var anyAppointments = await _context.Appointments
-                .AnyAsync(a => a.ConsultDoctor == consultDoctor && a.ScheduleEndTime > startTime);
-            return !anyAppointments;
+            try
+            {
+                var anyAppointments = await _context.Appointments
+                    .AnyAsync(a => a.ConsultDoctor == consultDoctor && a.ScheduleEndTime > startTime);
+                return !anyAppointments;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
         }
 
         public async Task<Appointment> GetAppointment(int id)
         {
-            Appointment appointment = await _context.Appointments.FirstOrDefaultAsync(a => a.PatientId == id);
-            return appointment;
+            try
+            {
+                Appointment appointment = await _context.Appointments.FirstOrDefaultAsync(a => a.PatientId == id);
+                return appointment;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return null;
+            }
         }
 
         public async Task<List<Appointment>> GetAppointmentList(int id)
         {
-            return await _context.Appointments
-                                    .Where(a => a.PatientId == id)
-                                    .ToListAsync();
+            try
+            {
+                return await _context.Appointments
+                    .Where(a => a.PatientId == id)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return new List<Appointment>(); 
+            }
         }
 
         public async Task<bool> RemoveAppointment(Appointment appointment)

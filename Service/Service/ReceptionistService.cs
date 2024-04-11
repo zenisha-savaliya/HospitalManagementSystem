@@ -2,13 +2,13 @@
 using Data.Models;
 using Service.DTO;
 using Service.Interface;
-using System.Numerics;
 using System.Text.RegularExpressions;
 
 namespace Service.Service
 {
     public class ReceptionistService : IReceptionistService
     {
+        #region Fields
         private readonly IDoctorRepository _doctorRepository;
         private readonly IUserRepository _userRepository;
         private readonly INurseRepository _nurseRepository;
@@ -16,8 +16,12 @@ namespace Service.Service
         private readonly IPatientRepository _patientRepository;
         private readonly IAppoinmentRepository _appoinmentRepository;
         private readonly IEmailService _emailService;
+        private readonly IHashPasswordService _hashPasswordService;
+        #endregion
 
-        public ReceptionistService(IDoctorRepository doctorRepository,IUserRepository userRepository,INurseRepository nurseRepository,IReceptionistRepository receptionistRepository,IPatientRepository patientRepository,IAppoinmentRepository appoinmentRepository,IEmailService emailService)
+        #region Constructor
+
+        public ReceptionistService(IDoctorRepository doctorRepository,IUserRepository userRepository,INurseRepository nurseRepository,IReceptionistRepository receptionistRepository,IPatientRepository patientRepository,IAppoinmentRepository appoinmentRepository,IEmailService emailService,IHashPasswordService hashPasswordService)
         {
             _doctorRepository = doctorRepository;
             _userRepository = userRepository;
@@ -26,7 +30,12 @@ namespace Service.Service
             _patientRepository = patientRepository;
             _appoinmentRepository = appoinmentRepository;
             _emailService = emailService;
+            _hashPasswordService = hashPasswordService;
+
         }
+        #endregion
+
+        #region Methods
         public async Task<string> ScheduleAppoinment(AppointmentDTO appointmentDTO)
         {
             string validationMessage = ValidateAppointmentDTO(appointmentDTO);
@@ -94,7 +103,7 @@ namespace Service.Service
                 {
                     FirstName = appointmentDTO.FirstName,
                     LastName = appointmentDTO.LastName,
-                    Password = password,
+                    Password = _hashPasswordService.HashPassword(password),
                     ContactNumber = appointmentDTO.ContactNumber,
                     Email = appointmentDTO.Email,
                     DateOfBirth = appointmentDTO.DateOfBirth,
@@ -107,7 +116,7 @@ namespace Service.Service
                 {
                     FirstName = appointmentDTO.FirstName,
                     LastName = appointmentDTO.LastName,
-                    Password = password,
+                    Password = _hashPasswordService.HashPassword(password),
                     ContactNumber = appointmentDTO.ContactNumber,
                     Email = appointmentDTO.Email,
                     DateOfBirth = appointmentDTO.DateOfBirth,
@@ -138,7 +147,7 @@ namespace Service.Service
                         ToEmail = appointmentDTO.Email,
                         Subject = "Appoinment Schdule with registration",
                         Body = $"<h4><b>Dear {appointmentDTO.FirstName},</b></h4><br>" +
-                       $"Your registration is successful.your password is {password}.You can login into our system using this password and can change it<br>" +
+                       $"Your registration is successful.your password is {password}.You can login into our system using this password." +
                        $"Your appointment has been scheduled successfully for {appointmentDTO.ScheduleStartTime}.<br>" +
                        $"Thank you."
                     };
@@ -160,6 +169,9 @@ namespace Service.Service
                 }
             }
         }
+        #endregion
+
+        #region PrivateMethods
 
         private string GeneratePassword(string firstName, DateTime dateOfBirth)
         { 
@@ -223,5 +235,6 @@ namespace Service.Service
             }
             return null;
         }
+        #endregion
     }
 }

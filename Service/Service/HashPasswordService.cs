@@ -6,6 +6,7 @@ namespace Service.Service
 {
     public class HashPasswordService : IHashPasswordService
     {
+        #region MethodToHashPassword
         public string HashPassword(string password)
         {
             using (SHA256 sha256 = SHA256.Create())
@@ -20,5 +21,6 @@ namespace Service.Service
                 return builder.ToString();
             }
         }
+        #endregion
     }
 }

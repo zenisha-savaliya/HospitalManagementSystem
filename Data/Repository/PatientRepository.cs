@@ -15,27 +15,49 @@ namespace Data.Repository
 
         public async Task<bool> CheckPatientExist(string Email, string FirstName)
         {
-            bool exists = await _context.Patients
-                .AnyAsync(u => u.Email == Email && u.FirstName == FirstName);
+            try
+            {
+                bool exists = await _context.Patients
+                    .AnyAsync(u => u.Email == Email && u.FirstName == FirstName);
 
-            return exists;
+                return exists;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while checking patient existence: {ex.Message}");
+                return false; 
+            }
         }
 
         public async Task<bool> CheckPatientExistById(int id)
         {
-            return await _context.Patients.AnyAsync(p => p.PatientId == id);
+            try
+            {
+                bool exists = await _context.Patients.AnyAsync(p => p.PatientId == id);
+                return exists;
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while checking patient existence by ID: {ex.Message}");
+                return false; 
+            }
         }
 
         public async Task<int> GetPatientId(string Email, string FirstName)
         {
-            Patient patient = await _context.Patients
-                .FirstOrDefaultAsync(p => p.Email == Email && p.FirstName == FirstName);
-
-            if (patient != null)
+            try
             {
-                return patient.PatientId;
+                Patient patient = await _context.Patients
+                    .FirstOrDefaultAsync(p => p.Email == Email && p.FirstName == FirstName);
+
+                return patient?.PatientId ?? 0;
             }
-            return 0;
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while fetching patient ID: {ex.Message}");
+                return -1; 
+            }
         }
 
         public async Task<bool> RegisterPatient(Patient patient)
