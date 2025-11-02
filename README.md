@@ -1,0 +1,1 @@
+Developed a Healthcare Management System using .NET Core Web API and Entity Framework Core, featuring secure patient registration, appointment scheduling, and email notifications with JWT-based authentication and compliance-focused data handling.
